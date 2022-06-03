@@ -1,0 +1,97 @@
+\input{config.tex}
+\begin{document} 
+
+\begin{multicols}{5}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\section*{Teorija aproksimacije}
+\begin{align*}
+    X\quad \dots& \quad \text{vekt. prostor katerega el. aproksimiramo} \\
+    S \subseteq X \quad \dots& \quad  \text{podprostor aproksimantov} \\
+    A: X \to S \quad \dots& \quad \text{operacijska shema (operator)}
+\end{align*}
+
+Prileganje aproksimanta ocenimo z normo:
+\begin{itemize}
+    \item \textbf{Neskončna norma} 
+    \[ \| f \|_{\infty, [a,b]} = \max_{x \in [a, b]} | f(x) | \]
+    \textit{Numerični približek:} na intervalu $[a, b]$ izberemo konkčno mnogo točk $a \leq x_0 < x_1 < \dots < x:n \leq b$. 
+    \[ \| f \|_{\infty, [a,b]} = \max_{i = 0, \dots, n} | f(x_i) | \]
+    \item \textbf{Druga norma} 
+    \begin{align*}
+        \| f \|_{2} &= \sqrt{\langle f, f \rangle} &
+        \langle f, g \rangle &= \int_a^b f(x) g(x) \rho(x) dx 
+    \end{align*}
+    Standardni skalarni produkt: $\rho \equiv 1$.
+
+    \textit{Numerični približek:} vzamemo diskretni skalarni produkt.
+    Na intervalu $[a, b]$ izberemo konkčno mnogo točk $a \leq x_0 < x_1 < \dots < x:n \leq b$.
+    \[\langle f, g \rangle = \sum_{i=0}^n f(x_i) g(x_i) \rho(x_i) dx\]
+\end{itemize}
+
+\subsection*{Optimalni aproksimacijski problem}
+Za $f \in X$ iščemo aproksimant $\hat{f} \in S$, da je
+\[ \| f - \hat{f} \| = \min_{s \in S} \| f - s \| \]
+
+\subsection*{Aproksimacija po metodi najmanjših kvadratov}
+Naj bo $X$ vektorski prostor nad $\mathbb{R}$ s skalarnim produktom $\langle \cdot, \cdot \rangle$ in normo $\| \cdot \|_2 = \sqrt{\langle \cdot, \cdot \rangle}$ 
+\[ S = \text{Lin}\{l_1, l_2, \dots, l_n\} \subseteq X \]
+
+Iščemo \textbf{element najboljše aproksimacije po MNK} $f^* \in S$, da $\| f - f^* \| = \min_{s \in S} \| f - s \| $
+
+\textit{Izrek:} $f^*$ je el. najboljše aproksimacije po MNK $\iff$ $f-f^* \perp S$ $\iff$
+$f-f^* \perp l_i \quad \forall i = 1,\dots n$
+
+\[ f^* = \alpha_1 l_1 + \dots + \alpha_n l_n\]
+
+Iz zgornjega izreka sledi:
+\begin{align*}
+\langle f - f^*, l_i \rangle &= 0 \quad \forall i\\
+\langle f - \sum_{j=1}^n \alpha_j l_j, l_i \rangle &= 0 \quad \forall i\\
+\langle f, l_i\rangle - \sum_{j=1}^n \alpha_j \langle  l_j, l_i \rangle &= 0 \quad \forall i\\
+\end{align*}
+V matrični obliki:
+\[
+    \underbrace{\begin{bmatrix}
+        \langle l_1, l_1 \rangle & \dots & \langle l_n, l_1 \rangle \\
+        \vdots & \ddots & \vdots \\
+        \langle l_1, l_n \rangle & \dots & \langle l_n, l_n \rangle
+    \end{bmatrix}}_{\text{Grammova matrika $G$}}
+    \begin{bmatrix}
+        \alpha_1 \\
+        \vdots \\
+        \alpha_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        \langle f, l_1 \rangle \\
+        \vdots \\
+        \langle f, l_n \rangle
+    \end{bmatrix}
+\]
+
+$G$ je simetrična pozitivno definitna matrika. Numerično tak sistem rešimo z razcepom Choleskega.
+
+
+Reševanje sistema linearnih enačb se izognemo tako, da bazo za $S$ ortonormiramo. Tedaj je $G = I$ in
+\[ f^* = \sum_{i=1}^n \langle f, l_i \rangle l_i \]
+
+\subsubsection*{Gram-Schmidtova ortogonalizacija}
+Definirajmo projekcijo vektorja $v$ na $u$
+\[\textmd{proj}_u(v) = \frac{\langle v,u \rangle}{\langle u,u \rangle}u\]
+Če želimo \emph{orotogonalizirati} $k$ linearno neodvisnih vektorjev $v_1, ..., v_k$, uporabimo postopek:
+\begin{equation*}
+    \begin{aligned}
+    u_1 &= v_1 \\
+    u_2 &= v_2 - \textmd{proj}_{u_1}(v_2) \\
+    u_3 &= v_3 - \textmd{proj}_{u_1}(v_3) - \textmd{proj}_{u_2}(v_3) \\
+    &\; \ \vdots \\
+    u_k &= v_k - \sum_{j=1}^{k-1} \textmd{proj}_{u_j}(v_k)
+    \end{aligned}
+\end{equation*}
+
+\end{multicols}
+\end{document}
