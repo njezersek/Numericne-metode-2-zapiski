@@ -109,6 +109,9 @@ Vhodni podatki: funkcija $f$, interval $[a,b]$, stopnja $n$, toleranca $\varepsi
 
 Izberi množico točk $E_0 = \{ x_i,\ a \leq x_0 < \dots < x_{n+1} \leq b \}$.
 
+\textbf{Minimaks} za funkcijo $f$ na $E$ je
+\[M_n(f, E) = \min_{p \in \mathbb{P}} \max_{x \in E} | f(x) - p(x) | = |m|\]
+
 Ponavljaj $k = 0, 1, 2, \dots$:
 \begin{itemize}
     \item Poišči polinom $p_k^* \in \mathbb{P}_n$, ki zadošča pogoju:
@@ -117,6 +120,99 @@ Ponavljaj $k = 0, 1, 2, \dots$:
     \[ |r_k(u)| = \| r_k \|_{\infty, [a,b]} \]
     \item Če je $|r_k(u)| - |m| < \epsilon$, potem končaj in vrni $p^* = p_k^*$. 
     Sicer pa naredimo zamenjavo točk v množici $E_k$ z $u$ tako, da ogranimo alternacijo residuala.
+\end{itemize}
+
+\subsection*{Interpolacija}
+Podane so vrednosti izbarne funkcije $f$ v $n+1$ paroma različnih točkah $x_i$ (\textbf{interpolacijske točke}),
+iščemo neko preprostejšo funkcijo $g$ (\textbf{interpolacijska funkcija}), ki zadošča pogoju:
+\[ f(x_i) = g(x_i) \qquad i = 0, 1, \dots, n \]
+
+\subsection*{Polinomska interpolacija}
+$f \in \mathcal{C}([a,b])$, $a \leq x_0 < \dots < x_n \leq b$. Iščemo polinom
+\[ p(x) = a_0 + a_1 x + a_2 x^2 + \dots + a_n x^n \]
+ki zadošča pogoju $f(x_i) = p(x_i)$ za $i = 0, 1, \dots, n$. 
+\[
+\underbrace{\begin{bmatrix}
+    1 & x_0 & x_0^2 & \dots & x_0^n \\
+    1 & x_1 & x_1^2 & \dots & x_1^n \\
+    \vdots & &        &       & \vdots \\
+    1 & x_n & x_n^2 & \dots & x_n^n \\
+\end{bmatrix}}_{\text{Vandermondova matrika $V$}}
+\begin{bmatrix}
+    a_0 \\
+    a_1 \\
+    \vdots \\
+    a_n
+\end{bmatrix}
+=
+\begin{bmatrix}
+    f(x_0) \\
+    f(x_1) \\
+    \vdots \\
+    f(x_n) \\
+\end{bmatrix}
+\]
+\[ det V = \prod_{0 \leq j < i \leq n} (x_i - x_j) \neq 0\]
+Vidimo, da je polinom $p$ enolično določen.
+
+\subsubsection*{Lagrangeova oblika interpolacijskega polinoma}
+\[ l_{i, n}(x) = \prod_{\substack{j=0 \\ j\neq i}}^n \frac{x-x_j}{x_i - x_j} \qquad i = 0, \dots, n \]
+
+% ni ključno
+Velja:
+\[ 
+l_{i,n}(x_j) = 
+\begin{cases}
+    1 & i = j \\
+    0 & \text{sicer}
+\end{cases}
+\]
+\textit{Lema:} $l_{i, n}$ so baza za $\mathbb{P}_n$.
+%
+
+Interpolacijski polinom v lagrangeovi obliki:
+\[ p(x) = \sum_{i=0}^n f(x_i) l_{i,n}(x)\]
+
+\subsubsection*{Newtonova oblika zapisa interpolacijskega polinoma}
+
+Za bazo izberemo prestavljene potence: $1$, $(x-x_0)$, $(x-x_0)(x-x_1)$, \dots  
+
+
+\textbf{Deljena diferenca} $[x_0, x_1, \dots, x_k] f$ je vodilni koeficient interpolacijskega polinoma
+stopnje $k$, ki se s funkcijo $f$ ujema v točkah $x_0, x_1, \dots, x_k$. Sledi:
+\[ p_k(x) = p_{k-1}(x) + [x_0, x_1, \dots, x_k] f (x-x_0)\dots (x-x_{k-1})\]
+Rekurzivna zveza:
+\begin{multline*}
+    [x_i, x_{i+1}, \dots, x_{i+k}]f = \\
+    = \begin{cases}
+        \frac{f^{(k)}(x_i)}{k!} & {\scriptstyle x_i = x_{i+1} = \dots = x_{i+k}} \\
+        \frac{[x_{i+1}, \dots, x_{i+k}]f- [x_i, \dots, x_{i+k-1}]f}{x_k-x_0} & {\scriptstyle x_i \neq x_{i+k} }
+    \end{cases} 
+\end{multline*} 
+
+Newtonova oblika zapisa je torej:
+\[ p(x) = \sum_{i=0}^n [x_0, \dots, x_i]f (x-x_0)\dots (x-x_{i-1}) \]
+
+\textit{Če želimo, da se polinom n neki toči ujema tudi v $k$-tem odvodu, to točko $k$-krat ponovimo.}
+
+\subsubsection*{Računanje vrednosti interpolacijskega polinoma v Newtonovi obliki}
+\[ p(x) = d_0 1 + d_1(x-x_0) + d_2(x-x_0)(x-x_1) + \dots \]
+
+\begin{koda}
+vhodni podatki: $x_0, \dots, x_n, \ d_0, \dots, d_n, \ x$
+$v_n \leftarrow d_n$
+za $i = n-1, \dots, 0$:
+    $v_i \leftarrow d_i + (x-x_i) v_{i+1}$
+
+vrni $v_0$
+\end{koda}
+
+\subsubsection*{Kako izbrati točke na $[a,b]$?}
+\begin{itemize}
+    \item \textbf{Ekvidistantne točke}: $h = \frac{b-a}{n}$, $x_i = a + ih$
+    \item \textbf{Izbira pri kateri je dosežen minimum}
+    \item \textbf{Čibiševe točke}
+    \[ x_i = \frac{a+b}{2} + \frac{a-b}{2}\cos\left(\frac{2i+1}{2n+2} \pi\right) \qquad i = 0, \dots, n\]
 \end{itemize}
 
 \end{multicols}
