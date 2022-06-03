@@ -93,5 +93,31 @@ Definirajmo projekcijo vektorja $v$ na $u$
     \end{aligned}
 \end{equation*}
 
+
+\subsection*{Enakomerna aproksimacija zveznih funkcij s polinomi}
+Za dano funkcijo $f \in \mathcal{C}([a,b])$ iščemo \textbf{polinom najboljše enakomerne aproksimacije} $p^* \in \mathbb{P}_n$, za katerega velja
+\[ \| f - p^* \|_{\infty, [a,b]} = \min_{p \in \mathbb{P}_n} \| f - p\|_{\infty, [a,b]} = \min_{p \in \mathbb{P}_n} \max_{x \in [a, b]} | f(x) - p(x) | \]
+
+\textit{Izrek:} Naj bo $f \in \mathcal{C}([a, b])$. Če je polinom $p \in \mathbb{P}_n$ takšen,
+da \textbf{residual} $r = f - p$ doseže svojo normo $\| r \|_{\infty, [a,b]}$ alternirajoče:
+$n+2$ tokčah $x_i$, $a \leq x_0 < \dots < x_{n+1} \leq b$ 
+\[ r(x_i)r(x_{i+1}) < 0 \qquad \forall i=0, \dots, n \]
+potem je $p$ polinom najboljše enak. aproks. za $f$ na $[a, b]$.
+
+\subsubsection*{Remesov postopek}
+Vhodni podatki: funkcija $f$, interval $[a,b]$, stopnja $n$, toleranca $\varepsilon$
+
+Izberi množico točk $E_0 = \{ x_i,\ a \leq x_0 < \dots < x_{n+1} \leq b \}$.
+
+Ponavljaj $k = 0, 1, 2, \dots$:
+\begin{itemize}
+    \item Poišči polinom $p_k^* \in \mathbb{P}_n$, ki zadošča pogoju:
+    \[ f(x_i) - p_k^* = (-1)^i m \qquad \forall i = 0, 1, \dots, n+2 \]
+    \item Poišči ekstrem residuala $r_k = f - p_k^*$. To je $u \in [a,b]$, da
+    \[ |r_k(u)| = \| r_k \|_{\infty, [a,b]} \]
+    \item Če je $|r_k(u)| - |m| < \epsilon$, potem končaj in vrni $p^* = p_k^*$. 
+    Sicer pa naredimo zamenjavo točk v množici $E_k$ z $u$ tako, da ogranimo alternacijo residuala.
+\end{itemize}
+
 \end{multicols}
 \end{document}
