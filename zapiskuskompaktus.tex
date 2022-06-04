@@ -215,5 +215,30 @@ vrni $v_0$
     \[ x_i = \frac{a+b}{2} + \frac{a-b}{2}\cos\left(\frac{2i+1}{2n+2} \pi\right) \qquad i = 0, \dots, n\]
 \end{itemize}
 
+
+\section*{Numerično odvajanje}
+Kot približek odvoda funkcije $f$ v izbrenem $x$ vzamemo verdnost dovoda interpolacijskega
+polinoma na točkah $x_0, \dots, x_n$ pri tem $x$.
+
+\begin{align*}
+    f(x) = p(x) + \omega(x)[x_o, x_n, x]f && \omega(x) = \prod_{i=0}^n (x-x_i) \\
+    p(x) = \sum_{i=0}^n f(x_i) l_{i,n} && l_{i,n}(x) = \prod_{\substack{j=0 \\ j \neq i}}^n \frac{x-x_j}{x_i - x_j}
+\end{align*}
+Odvajamo 
+\[
+f'(x) = 
+\underbrace{p'(x)}_{\mathclap{\text{približek}}} + 
+\underbrace{\omega'(x)[x_0, \dots, x_n, x] f + \omega(x)([x_o, \dots, x_n, x] f)'}_{\text{napaka}}
+\]
+
+Odvod deljene niference:
+\[ \frac{d}{dx} [x_0, \dots, x_n, x] f = [x_0, \dots, x_n, x, x] f\]
+
+Interpolacijske točke ponavadi izberemo ekvidistntno, za $x$ pa izberemo kar eno izmed
+interpolacijskih točk (npr. $x_k$). Potem dobimo:
+\[ 
+    f'(x_k) = p'(x_k) + 
+    \underbrace{\omega'(x_k) \frac{f^{(n+1)}(\xi)}{(n+1)!}}_{\text{napaka}}
+\]
 \end{multicols}
 \end{document}
