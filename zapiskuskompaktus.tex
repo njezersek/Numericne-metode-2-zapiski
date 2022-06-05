@@ -576,5 +576,63 @@ Primeri (red je enak $k$):
     y_n &= \frac{48}{11} y_{n-1} - \frac{36}{25} y_{n-2} + \frac{16}{25} y_{n-3} -q  \frac{3}{25} y_{n-3} + \frac{12}{25} h f_n \\
 \end{align*}
 
+\section*{Numerično računanje lastnih vrednosti}
+\begin{align*}
+    A \in \mathbb{C}^{n\times n} && x \in \mathbb{C}^n && \lambda \in \mathbb{C}
+\end{align*}
+$Ax = \lambda x$ $\implies$ $x$ je desni lastni vektor $\lambda$ pa pripadajoča lastna vrednost\\
+$y^HA = \lambda y^H = \overline{\lambda} y$ $\implies$ $y$  je levi lastni vektor $\lambda$ pa pripadajoča lastna vrednost
+
+Matriko $A$ se da \textbf{diagonalizirati}, če obstaja nesingularna matrika $X$ in diagonalna matrika $\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n) $, 
+da velja
+\begin{align*}
+    A = X\Lambda X^{-1} && \text{oz.} && AX = XA \\
+\end{align*}
+\begin{align*}
+X = [\underbrace{x_1, \dots, x_n}_{\text{stolpci}}] && && Ax_i = X\begin{bmatrix}
+    0 \\
+    \vdots\\
+    \lambda_i \\
+    \vdots \\
+    0
+\end{bmatrix}
+= \lambda_i x_i
+\end{align*}
+
+Matriki $A$ in $B$ sta podobni, če obstaja nesingularna matrika $S$, da velja $B = SAS^{-1}$.
+Podobne matrike imajo iste lastne vrednosti.
+
+Lastne vrednosti lahko (neučinkovito) izračunamo kot ničle \textbf{karakterističnega polinoma}
+\[\det (A-\lambda I) = 0\] 
+
+\subsection*{Schurova forma}
+Za vsako matriko $A \in \mathbb{C}^{m\times n}$ obstaja unitarna matrika $U$ ($U^HU = I = UU^H$) 
+in zgornje trikotna matrika $T$ (\textit{Schurova forma}), da velja
+\[ A = UTU^H \]
+
+Če pa je $A$ realna matrika, obstaja orotgonalna matrika $Q$ in kvazi (na diagonali dopuščamo $2\times 2$ bloke) 
+zgornje trikotna matrika $R$, da velja
+\[ A = QRQ^T \]
+
+\subsection*{Potenčna metoda}
+Za dano matriko $A$ iščemo \textbf{dominantno} (po absolutni vrednosti največjo) lastno vrednost
+in pripadajoč lastni vektor.
+
+Če imamo lastni vektor $x$, lahko pripadajočo lastno vrednost izrazimo z \textbf{Rayleighovim kvocientom}:
+\[ \lambda = \frac{x^T A x}{\| x \|^2}\]
+
+\begin{koda}
+vhod: matrika $A$, zacetni prblizek $z_0$, $\| z_0 \|=1$, toleranca $\epsilon$
+
+k = 0
+ponavljaj:
+    $y_{k+1} \leftarrow A z_k$
+    $\rho_k \leftarrow z_k^T y_k$
+    $z_{k+1} = \frac{y_{k+1}}{\| y_{k+1} \|}$
+    $k \leftarrow k + 1$
+dokler $(\| y_{k+1} - \rho_k z_k \| > \epsilon )$ in $(k \leq \text{max\_korakov})$
+vrni $z_k, \rho_k$
+\end{koda}
+
 \end{multicols}
 \end{document}
