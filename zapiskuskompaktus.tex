@@ -325,5 +325,256 @@ Fubinijev izrek:
     I = \iint_{[a,b]\times [c,d]} f(x, y) dx dy = \\ 
     = \int_a^b dx \int_c^d f(x,y) dy = \int_c^d dy \int_a^b f(x, y) dx
 \end{multline*}
+
+
+\section*{Reševanje diferencialnih enačb}
+
+
+% ni ključno
+\textit{Eksistenčni izrek za začetni probelm:} $y' = f(x,y)$, $y(a) = y_a$. Naj bo $f$
+na območju $D$ okrog $(a, y_a)$ zvezna funkcija in Lipschitzova v drugi spremenljivki:
+\[ |f(x,y) - f(x, \tilde{y}) | \leq C |y-\tilde{y}| \]
+Potem obstaja nek podinterval $[\alpha, \beta]$, ki vsebuje $a$, na katerem rešitev
+začetnega probelma DE obstaja in je enolična.
+%
+
+\subsection*{Eksplicitna Eulerjeva metoda}
+\[ y_{n+1} = y_n + h f(x_n, y_n) \qquad x_{n+1} = x_n + h\]
+
+\subsection*{Implicitna Eulerjeva metoda}
+\[ y_{n+1} = y_n + hf(x_{n+1}, y_{n+1}) \qquad x_{n+1} = x_n + h\]
+
+Za izračun $y_{n+1}$ moramo rešiti nelinearno enačbo. Uporabio lahko navadno iteracijo:
+\[ y_{n+1}^{(r)} = g(y_{n+1}^{(r-1)}) \qquad g(y_{n+1}) = y_n + hf(x_{n+1}, y_{n+1}) \]
+
+Za začetni približek $y_{n+1}^{(0)}$ vzamemo kar $y_n$.
+
+\subsection*{Trapezno pravilo}
+\[ y_{n+1} = y_n + \frac{h}{2}\left(f(x_n, y_n) + f(x_{n+1}, y_{n+1})\right)\]
+
+\subsection*{Globalna in lokalna napaka}
+Globalna napaka v točki $x_n$:
+\[ |y(x_n) - y_n | \]
+Globalna napaka:
+\[\max_{0 \leq n \leq m} |y(x_n) - y_n |\]
+
+Metoda je \textbf{reda} $r$, če velja
+\[ \max_{0 \leq n \leq m} |y(x_n) - y_n| = \text{konst.} h^r + \mathcal{O}\left(h^{r+1}\right) = \mathcal{O}\left(h^r\right)\]
+
+Lokalna napaka v točki $x_n$ je razlika med točno rešitvijo v $x_n$ in njenim numeričnim približkom $y_n$
+ob predpostavki, da se točna in numerična rešitev ujemata v vseh prejšnjih korakih:
+\[ \tau_n(h) = y(x_n) - y_n \qquad y(x_k) = y_k; \ \forall k < n\]
+
+Pri določanju lokalne napake si pomagamo z razvojem v Taylorjevo vrsto po $h$ okoli $x$.
+\[ y(x+h) = y(x) + hy'(x)+\frac{h^2}{2!}y''(x) + \frac{h^3}{3!}y^{(3)}(x) + \dots\]
+\begin{multline*}
+    f(x + \Delta x, y + \Delta y) = f(x,y) + f_x(x,y)\Delta x + f_y(x,y) \Delta y + \\
+    + \frac{1}{2!}\left( f_{xx}(x,y)\Delta x^2 + 2 f_{xy}(x,y) \Delta x \Delta y + f_{yy}(x,y) \Delta y^2\right) + \dots
+\end{multline*}
+
+Če je red lokalne napake $r$, je red metode $r-1$.
+
+\subsection*{Runge Kutta metode}
+Izračunamo $s$ koeficientov
+\begin{gather*}
+    k_i = hf(x_n + \alpha h, y_n + \sum_{j=1}^s \beta_{ij} k_j) \qquad i = 1, 2, \dots, s \\
+    y_{n+1} = y_n + \sum_{i=1}^s \gamma k_i
+\end{gather*}
+Pri tem so $\alpha_i$, $\beta_{ij}$ in $\gamma_i$ koeficienti, ki so predstavljeni v \textbf{Butcherjevi shemi}:
+\begin{center}
+    \begin{tabular}[]{c | c c c}
+        $\alpha_1$ & $\beta_{11}$ & $\dots$ & $\beta_{1s}$ \\
+        $\alpha_2$ & $\beta_{21}$ & $\dots$ & $\beta_{2s}$ \\
+        $\vdots$ &                &         & $\vdots$ \\
+        $\alpha_s$ & $\beta_{s1}$ & $\dots$ & $\beta_{ss}$ \\ \hline
+                 & $\gamma_{1}$ & $\dots$ & $\gamma_{s}$ \\
+
+    \end{tabular}
+\end{center}
+Veljati mora:
+\[\alpha_i = \sum_{j=1}^{s} \beta_{ij} \qquad \sum_{i=1}^s \gamma = 1\]
+
+\begin{multicols*}{3}
+    
+    \textbf{Eulerjeva}
+    \begin{center}
+        \renewcommand{\arraystretch}{1.5}
+        \begin{tabular}[]{c | c c}
+            $0$ & 0 & 0 \\
+            $\frac{1}{2}$ & $\frac{1}{2}$ & 0 \\ \hline
+            & 0 & 1 \\
+            
+        \end{tabular}
+    \end{center}
+    red: 2
+
+    \textbf{Heunova}
+    \begin{center}
+        \renewcommand{\arraystretch}{1.5}
+        \begin{tabular}[]{c | c c}
+            $0$ & 0 & 0 \\
+            $1$ & $1$ & 0 \\ \hline
+            & $\frac{1}{2}$ & $\frac{1}{2}$ \\
+            
+        \end{tabular}
+    \end{center}
+    red: 2
+    
+    \textbf{Diag. impl.}
+    \begin{center}
+        \renewcommand{\arraystretch}{1.5}
+        \begin{tabular}[]{c | c c}
+            $0$ & 0 & 0 \\
+            $1$ & $\frac{1}{2}$ & $\frac{1}{2}$ \\ \hline
+            & $\frac{1}{2}$ & $\frac{1}{2}$ \\
+            
+        \end{tabular}
+    \end{center}
+    red: 2
+\end{multicols*}
+
+\textbf{4 stopenjska R-K metoda}
+\begin{center}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}[]{c | c c c c}
+        $0$ & 0 &  &  &  \\
+        $\frac{1}{2}$ & $\frac{1}{2}$  & 0 &  &  \\
+        $\frac{1}{2}$ & 0  & $\frac{1}{2}$  & 0 &  \\
+        $1$ & 0  & 0  & 1 & 0 \\ \hline
+                 & $\frac{1}{6}$ & $\frac{2}{6}$ & $\frac{2}{6}$ & $\frac{1}{6}$ \\
+
+    \end{tabular}
+\end{center}
+red: 4
+
+\subsection*{Sistemi diferencialnih enačb 1. reda}
+\begin{align*}
+    y_1' &= f_1(x, y_1, \dots, y_d) & y_1(a) &= y_{1,a} \\
+        &\vdots                     &        &\vdots \\
+    y_d' &= f_d(x, y_d, \dots, y_d) & y_d(a) &= y_{d,a}
+\end{align*}
+Vektorski zapis:
+\begin{align*}
+    Y &= \begin{bmatrix}
+        y_1 \\
+        \vdots \\
+        y_d
+    \end{bmatrix}
+    &\qquad
+    Y:& [a,b] \to \mathbb{R}^d \\
+    F &= \begin{bmatrix}
+        f_1 \\
+        \vdots \\
+        f_d
+    \end{bmatrix}
+    &\qquad
+    F:& [a,b] \times \mathbb{R}^d  \to \mathbb{R}^d 
+\end{align*}
+
+\[ Y' = F(x, Y) \qquad Y(a) = Y_a = \begin{bmatrix}
+    y_{1,a} \\
+    \vdots \\
+    y_{d,a}
+\end{bmatrix}\]
+Vse prej naštete metode lahko direktno uporabimo za reševanje sistemov.
+
+\subsection*{Diferencialne enačbe višjega reda}
+\begin{gather*}    
+    y^{(p)} = f(x, y, y', \dots, y^{(p-1)}) \\
+    y(a) = y_{a,0} \qquad y'(a) = y_{a,1} \qquad y'(p-1) = y_{a,p-1} 
+\end{gather*}   
+Problem prevedemo na sistem diferencialnih enačb 1. reda.
+Uvedemo nove neznane funkcije $z_1, z_2, \dots, z_{p-1}$:
+\begin{align*}
+    z_1 &= y' \\
+    z_2 &= z_1' = y'' \\
+    & \vdots \\
+    z_{p-1} &= z_{p-2}' = y^{p-1} \\
+    z_{p-1}' &= y^{(p)} = f(x, y, z_1, \dots, z_{p-1})
+\end{align*}
+\begin{align*}
+    \begin{bmatrix}
+        y \\
+        z_1 \\
+        \vdots \\
+        z_{p-2} \\
+        z_{p-1} \\
+    \end{bmatrix}'
+    &=
+    \begin{bmatrix}
+        z_1 \\
+        z_2 \\
+        \vdots \\
+        z_{p-1} \\
+        f(x,y, z_1, ...\, , z_{p-1}) \\
+    \end{bmatrix}
+    &
+    \begin{bmatrix}
+        y(a) \\
+        z_1(a) \\
+        \vdots \\
+        z_{p-2}(a) \\
+        z_{p-1}(a) \\
+    \end{bmatrix}
+    &=
+    \begin{bmatrix}
+        y_{a,0} \\
+        a_{a,1} \\
+        \vdots \\
+        a_{a,p-2} \\
+        a_{a,p-1} \\
+    \end{bmatrix}
+\end{align*}
+
+\subsection*{Več čelenske metode}
+Pri izračunu približkov $y_n = y(x_n)$ uporabimo $k$ vrednosti: $y_{n-1}, y_{n-2}, \dots, y_{n-k}$.
+
+Splošna linearna $k$-členska metoda:
+\[ y_n = \sum_{i=1}^k \alpha_i y_{n-i} + h \sum_{i=0}^k \beta_i \underbrace{f(x_{n-i}, y_{n-i})}_{f_{n-i}} \]
+
+Pri tem so $@a_i$ in $\beta_i$ prosti koeficienti. Če je $\beta_0 = 0$, je metoda eksplicitna, sicer pa implicitna.
+
+Prvih $k$ vrednosti $y_0, y_1, \dots, y_{k-1}$ moramo izračunti s kako od enočlenskih metod (njen red mora bit vsaj toliko, kot red $k$-členske metode).
+
+\subsubsection*{Adamsove metode}
+Enačbo $y' = f(x,y)$ integriramo na intervalu $[x_{n-1}, x_n]$, funkcijo $f(x, y(x))$ pa nadomestimo z interpolacijskim
+polinomom na točkah $x_{n-k}, x_{n-k+1}, \dots, x_{n-1}$ (eksplicitna) ali  $x_{n-k}, x_{n-k+1}, \dots, x_{n}$ (implicitna).
+
+Eksplicitne: $k = 2, 3, 4$ (po vrsti), red = $2, 3, 4$:
+\begin{align*}
+    y_n &= y_{n-1} + h\left( \frac{3}{2} f_{n-1} - \frac{1}{2} f_{n-2}\right) \\
+    y_n &= y_{n-1} + h\left( \frac{23}{12} f_{n-1} - \frac{4}{3} f_{n-2} + \frac{5}{12}f_{n-3}\right) \\
+    y_n &= y_{n-1} + h\left( \frac{55}{24} f_{n-1} - \frac{59}{24} f_{n-2} + \frac{37}{24}f_{n-3} - \frac{9}{24} f_{n-4}\right) \\
+\end{align*}
+
+Implicitne: $k = 2, 3, 4$ (po vrsti), red = $3, 4, 5$:
+\begin{align*}
+    y_n &= y_{n-1} + h\left( \frac{5}{12} f_{n} + \frac{8}{12} f_{n-1} - \frac{1}{12} f_{n-2}\right) \\
+    y_n &= y_{n-1} + h\left( \frac{9}{24} f_{n} + \frac{19}{24} f_{n-1} - \frac{5}{24} f_{n-2} + \frac{1}{24}f_{n-3}\right) \\
+    y_n &= y_{n-1} + {\scriptstyle h\left( \frac{251}{720} f_{n} + \frac{646}{720} f_{n-1} - \frac{264}{720} f_{n-2} + \frac{106}{720}f_{n-3} - \frac{19}{720} f_{n-4}\right) }
+\end{align*}
+
+\subsubsection*{Milneove metode}
+Ideja za izpeljavo: DE $y' = f(x,y)$ integriramo na $[x_{n-k}, x_n]$, integral pa aproksimiramo z Newton-Cotesovimi pravili.
+
+Odprta pravila $\rightarrow$ eksplicitne metode \\
+Zaprta pravila $\rightarrow$ implicitne metode 
+
+Primer eksplicitne metode: $k = 3$, red = 4:
+\[ y_n = y_{n-4} + \frac{4h}{3} (2f_{n-1} - f_{n-2} + 2f_{n-3}) \]
+
+Primer implicitne metode: $k = 2$, red = 4:
+\[ y_n = y_{n-2} + \frac{h}{3} (f_{n} + 4f_{n-1} + f_{n-2}) \]
+
+\subsubsection*{BDF metode}
+To so implicitne metode. Odvod v enačbi $y'(x_n) = f(x_n, y(x_n))$ aproksimiramo z diferencami.
+
+Primeri (red je enak $k$):
+\begin{align*}
+    y_n &= \frac{4}{3} y_{n-1} - \frac{1}{3} y_{n-2} + \frac{2}{3}h f_n \\
+    y_n &= \frac{18}{11} y_{n-1} - \frac{9}{11} y_{n-2} + \frac{2}{11} y_{n-3} + \frac{6}{11} h f_n \\
+    y_n &= \frac{48}{11} y_{n-1} - \frac{36}{25} y_{n-2} + \frac{16}{25} y_{n-3} -q  \frac{3}{25} y_{n-3} + \frac{12}{25} h f_n \\
+\end{align*}
+
 \end{multicols}
 \end{document}
