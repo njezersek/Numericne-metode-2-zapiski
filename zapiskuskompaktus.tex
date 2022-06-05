@@ -240,5 +240,90 @@ interpolacijskih točk (npr. $x_k$). Potem dobimo:
     f'(x_k) = p'(x_k) + 
     \underbrace{\omega'(x_k) \frac{f^{(n+1)}(\xi)}{(n+1)!}}_{\text{napaka}}
 \]
+
+\section*{Numerično integriranje}
+
+Namesto $f$ integriramo aproksimacijski polinom na izbranih točkah $a \leq x_0 < \dots < x_n \leq x_n$ (\textbf{vozli}).
+\[
+f(x) = p(x) + \omega(x) [x_0, \dots, x_n, x] f
+\]
+\begin{align*}
+    p(x) = \sum_{i=0}^n f(x_i) l_{i,n}(x) && \omega(x) = \prod_{i=0}^n (x-x_i)
+\end{align*}
+
+Kvadraturna formula oz. integracijsko pravilo
+\[
+\underbrace{\int_a^b f(x) dx}_{Sf} =
+\underbrace{\int_a^b p(x) dx}_{Ff} +
+\underbrace{\int_a^b \omega(x)[x_0, \dots, x_n, x]f dx}_{Rf} 
+\]
+
+\begin{multline*}  
+    \int_a^b p(x) dx = 
+    \int_a^b \sum_{i=0}^n f(x_i) l_{i,n}(x) dx = \\
+    = \sum_{i=0}^n f(x_i) \underbrace{\int_a^b l_{i,n}(x) dx}_{\text{utež } A_i} = 
+    \sum_{i=0}^n A_i f(x_i)
+\end{multline*}
+
+\subsubsection*{Red integracijskega pravila}
+je enak $m$, če je pravilo točno ($Rf = 0$) za vse polinome stopnje manjše ali enake $m$ ni pa točno ($Rf \neq 0$) za polinome višje stopnje kot $m$.
+
+\textit{Dovolj je preveriti bazne polinome.}
+
+\subsection*{Newton-Cotesova pravila}
+Vozle izberemo ekvidistantno.
+\begin{align*}
+    h = \frac{b-a}{n} && x_0 = a && x_i = x_0 + ih; \quad i = 0, 1, \dots, n
+\end{align*}
+
+Ločimo pravila \textbf{zaprtega tipa} pri katerih upoštevamo krajišča in \textbf{odprtega tipa} pri katerih jih ne.
+
+\subsubsection*{Trapezno pravilo}
+\[ \int_{x_0}^{x_1} f(x) dx = \frac{h}{2} (f(x_0) + f(x_1)) + Rf\]
+\[ Rf = \int_{x_0}^{x_1} (x-x_0)(x-x_1) [x_0, x_1, x] f dx = -\frac{h^3}{12} f''(\xi)\]
+
+\subsubsection*{Simpsonovo pravilo}
+\[ \int_{x_0}^{x_2} f(x) dx = \frac{h}{3} (f(x_0) + 4f(x_1) + f(x_2)) + Rf\]
+\[ Rf = -\frac{h^5}{90} f^{(4)}(\xi)\]
+
+\subsubsection*{Ocena napake in Richardsonova ekstrapolacija}
+Integral računamo s sestavljenim Newton-Cotesovim pramilom. S $F_h$ označimo približek, ki ga dobimo s 
+korakom $h$. Predpostavimo, da velja:
+
+\[ I = F_h + c_0 h^p + \mathcal{O}\left( h^{p+1} \right)\]
+
+Kjer je $c_0$ konstanta odvisna samo od $h$.
+
+Natančnješi (ekstrapoliran) približek:
+\[ I = \frac{2^p F_{h/2} - F_h}{2^p - 1} + \mathcal{O}\left(h^{p+1}\right)\]
+
+Ocena za napako iz primerjave $F_h$ in $F_{h/2}$:
+\begin{align*}
+    I = F_{h/2} + \underbrace{\frac{F_{h/2} - F_h}{2^p - 1}}_{\mathclap{\text{ocena napake $F_{h/2}$}}} + \mathcal{O}\left( h^{p+1} \right) \\
+    I = F_{h} + \underbrace{2^p\frac{F_{h/2} - F_h}{2^p - 1}}_{\mathclap{\text{ocena napake $F_{h}$}}} + \mathcal{O}\left( h^{p+1} \right) \\
+\end{align*}
+\subsection*{Gaussova pravila}
+Vozle ($x_i$) in uteži ($A_i$) izračunamo tako, da bo pravilo čim višjega reda.
+
+\[ \int_a^b f(x) dx = \sum_{i=0}^n A_i f(x_i) + Rf \]
+
+Imamo $2(n+1)$ neznank, ki jih doličimo tako, da bo pravilo reda $2n+1$:
+\[ \int_a^b x^k dx = \sum_{i=0}^n A_i x_i^k \qquad k=0,1,\dots, 2n+1\]
+
+Želimo ločiti enačbe za neznanke uteži od neznank za vozle. Vozle laho izračunamo iz linearnega sistema ($n+1$) enačb:
+\begin{align*}
+    \omega(x) = (x-x_0)\dots (x-x_n) \\
+    \int_a^b \omega(x) x^k dx = 0 \qquad k = 0,\dots, n
+\end{align*}
+
+\textit{Izrek:} za funkcijo $f \in \mathcal{C}^{2n+2}([a,b])$ je napaka Gaussovega pravila reda $2n+1$
+\[ Rf = \frac{f^{(2n+2)}(\xi)}{(2n+2)!} \int_a^b \omega^2(x) dx \]
+
+\subsection*{Integrali v več dimenzijah}
+Fubinijev izrek:
+\begin{multline*}
+    I = \iint_{[a,b]\times [c,d]} f(x, y) dx dy = \\ 
+    = \int_a^b dx \int_c^d f(x,y) dy = \int_c^d dy \int_a^b f(x, y) dx
+\end{multline*}
 \end{multicols}
 \end{document}
