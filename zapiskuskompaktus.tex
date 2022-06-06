@@ -32,6 +32,14 @@ Prileganje aproksimanta ocenimo z normo:
     \[\langle f, g \rangle = \sum_{i=0}^n f(x_i) g(x_i) \rho(x_i) dx\]
 \end{itemize}
 
+\subsection*{Bernsteinova aproksimacija}
+\begin{gather*}
+    B_i^n(x) = \binom{n}{i} x^i (1-x) \qquad i = 0, \dots, n; x \in [0, 1] \\
+    (B_n f)(x) = \sum_{i=0}^n f(\frac{i}{n}) B_i^n(x) \quad \text{za}\ [0, 1] \\
+    (B_n f)(x) = \sum_{i=0}^n f\left(a+\frac{i}{n}(b-a)\right) B_i^n\left(\frac{x-a}{b-a}\right) \quad \text{za}\ [a, b] \\
+\end{gather*}
+
+
 \subsection*{Optimalni aproksimacijski problem}
 Za $f \in X$ iščemo aproksimant $\hat{f} \in S$, da je
 \[ \| f - \hat{f} \| = \min_{s \in S} \| f - s \| \]
@@ -191,9 +199,14 @@ Rekurzivna zveza:
 \end{multline*} 
 
 Newtonova oblika zapisa je torej:
-\[ p(x) = \sum_{i=0}^n [x_0, \dots, x_i]f (x-x_0)\dots (x-x_{i-1}) \]
+\[ p(x) = \sum_{i=0}^n [x_0, \dots, x_i]f \cdot (x-x_0)\dots (x-x_{i-1}) \]
 
 \textit{Če želimo, da se polinom n neki toči ujema tudi v $k$-tem odvodu, to točko $k$-krat ponovimo.}
+
+\[ f(x) = p(x) + \omega(x) \underbrace{[x_0, \dots, x_n, x] f}_{\frac{f^{(n+1)}(\xi)}{(n+1)!}} \quad \omega(x) = \prod_{i=0}^n (x-x_i)\]
+
+\textbf{Napako} interpolacije izračunamo kot maksimum
+\[\omega(x) \frac{f^{(n+1)}(\xi)}{(n+1)!} \qquad x, \xi \in [x_0, x_n]\]
 
 \subsubsection*{Računanje vrednosti interpolacijskega polinoma v Newtonovi obliki}
 \[ p(x) = d_0 1 + d_1(x-x_0) + d_2(x-x_0)(x-x_1) + \dots \]
@@ -676,5 +689,12 @@ zaporedje matrike $(A_k)_k$, ki ga tvori QR iteracija, konvergira proti zgornje 
 Postopek lahko izboljšamo z redukcije A na zgornje Hessenbergovo obliko.
 
 Matrika $A$ je \textbf{zgornje Hessenbergova}, če je $a_{ij} = 0$ za $i \geq j+2$.
+
+\subsection*{Gershgorinov izrek}
+lastne vrednosti matrike $A \in \mathbb{C}^{n\times n}$ ležijo v uniji \textit{Gershgorinovih krogov}:
+\[ K_i = \left\{z \in \mathbb{C} \ : \ |z-a_{ii}| \leq \sum_{\substack{j = 1 \\ j \neq i}}^n |a_{ij}|\right\} \quad i = 1, \dots, n\]
+
+Če unija krogov razpade na več nepovezanih komponent, je v vsaki komponenti ravno toliko lastnih
+vrednosti kolikor krogov jo sestavlja.
 \end{multicols}
 \end{document}
