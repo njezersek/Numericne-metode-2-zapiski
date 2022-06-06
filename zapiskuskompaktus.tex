@@ -634,5 +634,47 @@ dokler $(\| y_{k+1} - \rho_k z_k \| > \epsilon )$ in $(k \leq \text{max\_korakov
 vrni $z_k, \rho_k$
 \end{koda}
 
+\subsection*{Inverzna iteracija}
+Iz danega približka za lastno vrednost bomo izračunali točno (boljši približek) lastno vrednost in pripadajoči lastni vektor.
+% ni ključno
+Naj bo $\sigma$ približek za lastno verdnost $\lambda_i$ matrike $A$. Zahtevamo, da je $\sigma$ bližje $\lambda_i$, kot kateri koli drugi lastni vrednosti:
+\[ |\lambda_i - \sigma | < |\lambda_j - \sigma| \quad \forall j \neq i\]
+
+Naj velja $A = X \Lambda X^{-1}$, $\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n)$.
+
+Matriki $A$ in $(A-\sigma I)^{-1}$ imata enake lastne vektorje. Če je $(\lambda_i, x_i)$ lastni par matrike $A$, je $(\frac{1}{\lambda_i - \sigma}, x_j)$ lastni par matrike $(A-\sigma I)^{-1}$.
+Ker je $\frac{1}{|\lambda_i - \sigma|} > \frac{1}{|\lambda_j - \sigma|}$ za $\forall j \neq i$, je $x_i$ dominanten lastni vektor matrike $(A-\sigma I)^{-1}$ in ga lahko dobimo s potenčno metodo.
+%
+
+\begin{koda}
+vhod: priblizek za lastno vrednost $\sigma$
+izberi normiran vektor $z_0$
+ponavljaj $k=0, 1, 2, \dots$:
+    $y_{k+1} \leftarrow $ resi sistem $(A-\sigma I) y_{k+1} = z_k$
+    $z_{k+1} \leftarrow \frac{y_{k+1}}{\| y_{k+1} \|}$
+
+vrni $z_k$
+\end{koda}
+
+Zaporedje $z_k$ konvergira proti lastnemu vektorju, ki ima lastno vrednost najbližje $\sigma$.
+
+
+\subsection*{QR iteracija}
+Metoda za izračun vseh lastnih vrednosti poljubne (nesimetrične) matrike.
+
+\begin{koda}
+vhod: matrika $A$
+$A_0 \leftarrow A$
+ponavljaj $k = 0, 1, 2, \dots$:
+    Izracunaj QR razcep matrike $A_k$: $A_k = Q_k R_k$
+    $A_{k+1} \leftarrow R_k Q_k$
+\end{koda}
+
+Naj za lastne vrednosti matrike $A$ velja $|\lambda_1| > \dots > |\lambda_n| \geq 0$. Potem
+zaporedje matrike $(A_k)_k$, ki ga tvori QR iteracija, konvergira proti zgornje trikotni matirki iz Schurevega razcepa.
+
+Postopek lahko izboljšamo z redukcije A na zgornje Hessenbergovo obliko.
+
+Matrika $A$ je \textbf{zgornje Hessenbergova}, če je $a_{ij} = 0$ za $i \geq j+2$.
 \end{multicols}
 \end{document}
