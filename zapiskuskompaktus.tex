@@ -123,11 +123,11 @@ Izberi množico točk $E_0 = \{ x_i,\ a \leq x_0 < \dots < x_{n+1} \leq b \}$.
 Ponavljaj $k = 0, 1, 2, \dots$:
 \begin{itemize}
     \item Poišči polinom $p_k^* \in \mathbb{P}_n$, ki zadošča pogoju:
-    \[ f(x_i) - p_k^* = (-1)^i m \qquad \forall i = 0, 1, \dots, n+2 \]
+    \[ f(x_i) - p_k^*(x_i) = (-1)^i m \qquad \forall i = 0, 1, \dots, n+2 \]
     \item Poišči ekstrem residuala $r_k = f - p_k^*$. To je $u \in [a,b]$, da
     \[ |r_k(u)| = \| r_k \|_{\infty, [a,b]} \]
     \item Če je $|r_k(u)| - |m| < \epsilon$, potem končaj in vrni $p^* = p_k^*$. 
-    Sicer pa naredimo zamenjavo točk v množici $E_k$ z $u$ tako, da ogranimo alternacijo residuala.
+    Sicer pa naredimo zamenjavo točk v množici $E_k$ z $u$ tako, da ohranimo alternacijo residuala.
 \end{itemize}
 
 \subsection*{Interpolacija}
@@ -181,6 +181,8 @@ l_{i,n}(x_j) =
 Interpolacijski polinom v lagrangeovi obliki:
 \[ p(x) = \sum_{i=0}^n f(x_i) l_{i,n}(x)\]
 
+\[ f(x) - p(x) = \frac{f^{(n+1)}(\xi)}{(n+1)!} \omega(x) \]
+
 \subsubsection*{Newtonova oblika zapisa interpolacijskega polinoma}
 
 Za bazo izberemo prestavljene potence: $1$, $(x-x_0)$, $(x-x_0)(x-x_1)$, \dots  
@@ -194,7 +196,7 @@ Rekurzivna zveza:
     [x_i, x_{i+1}, \dots, x_{i+k}]f = \\
     = \begin{cases}
         \frac{f^{(k)}(x_i)}{k!} & {\scriptstyle x_i = x_{i+1} = \dots = x_{i+k}} \\
-        \frac{[x_{i+1}, \dots, x_{i+k}]f- [x_i, \dots, x_{i+k-1}]f}{x_k-x_0} & {\scriptstyle x_i \neq x_{i+k} }
+        \frac{[x_{i+1}, \dots, x_{i+k}]f- [x_i, \dots, x_{i+k-1}]f}{x_{i+k}-x_i} & {\scriptstyle x_i \neq x_{i+k} }
     \end{cases} 
 \end{multline*} 
 
@@ -291,6 +293,12 @@ Vozle izberemo ekvidistantno.
 
 Ločimo pravila \textbf{zaprtega tipa} pri katerih upoštevamo krajišča in \textbf{odprtega tipa} pri katerih jih ne.
 
+Uteži določimo:
+\begin{itemize}
+    \item Z integracijo: $f \approx p$ $\implies$ $\int f \approx \int p$
+    \item Z metodo nedoločenih koeficientov (uteži določimo tako, da je stopnja največja; splača se vzeti $(x-x_0)^k$)
+\end{itemize}
+
 \subsubsection*{Trapezno pravilo}
 \[ \int_{x_0}^{x_1} f(x) dx = \frac{h}{2} (f(x_0) + f(x_1)) + Rf\]
 \[ Rf = \int_{x_0}^{x_1} (x-x_0)(x-x_1) [x_0, x_1, x] f dx = -\frac{h^3}{12} f''(\xi)\]
@@ -305,7 +313,7 @@ korakom $h$. Predpostavimo, da velja:
 
 \[ I = F_h + c_0 h^p + \mathcal{O}\left( h^{p+1} \right)\]
 
-Kjer je $c_0$ konstanta odvisna samo od $h$.
+Kjer je $c_0$ konstanta neodvisna od $h$.
 
 Natančnješi (ekstrapoliran) približek:
 \[ I = \frac{2^p F_{h/2} - F_h}{2^p - 1} + \mathcal{O}\left(h^{p+1}\right)\]
@@ -390,8 +398,8 @@ Pri določanju lokalne napake si pomagamo z razvojem v Taylorjevo vrsto po $h$ o
 \subsection*{Runge Kutta metode}
 Izračunamo $s$ koeficientov
 \begin{gather*}
-    k_i = hf(x_n + \alpha h, y_n + \sum_{j=1}^s \beta_{ij} k_j) \qquad i = 1, 2, \dots, s \\
-    y_{n+1} = y_n + \sum_{i=1}^s \gamma k_i
+    k_i = hf(x_n + \alpha_i h, y_n + \sum_{j=1}^s \beta_{ij} k_j) \qquad i = 1, 2, \dots, s \\
+    y_{n+1} = y_n + \sum_{i=1}^s \gamma_i k_i
 \end{gather*}
 Pri tem so $\alpha_i$, $\beta_{ij}$ in $\gamma_i$ koeficienti, ki so predstavljeni v \textbf{Butcherjevi shemi}:
 \begin{center}
@@ -539,13 +547,13 @@ Uvedemo nove neznane funkcije $z_1, z_2, \dots, z_{p-1}$:
     \end{bmatrix}
 \end{align*}
 
-\subsection*{Več čelenske metode}
+\subsection*{Veččelenske metode}
 Pri izračunu približkov $y_n = y(x_n)$ uporabimo $k$ vrednosti: $y_{n-1}, y_{n-2}, \dots, y_{n-k}$.
 
 Splošna linearna $k$-členska metoda:
 \[ y_n = \sum_{i=1}^k \alpha_i y_{n-i} + h \sum_{i=0}^k \beta_i \underbrace{f(x_{n-i}, y_{n-i})}_{f_{n-i}} \]
 
-Pri tem so $@a_i$ in $\beta_i$ prosti koeficienti. Če je $\beta_0 = 0$, je metoda eksplicitna, sicer pa implicitna.
+Pri tem so $\alpha_i$ in $\beta_i$ prosti koeficienti. Če je $\beta_0 = 0$, je metoda eksplicitna, sicer pa implicitna.
 
 Prvih $k$ vrednosti $y_0, y_1, \dots, y_{k-1}$ moramo izračunti s kako od enočlenskih metod (njen red mora bit vsaj toliko, kot red $k$-členske metode).
 
